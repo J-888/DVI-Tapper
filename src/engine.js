@@ -145,7 +145,8 @@ var SpriteSheet = new function() {
     this.map = spriteData;
     this.image = new Image();
     this.image.onload = callback;
-    this.image.src = 'img/sprites.png';
+    //this.image.src = 'img/sprites.png';
+    this.image.src = 'spritesTapper.png';
   };
 
   this.draw = function(ctx,sprite,x,y,frame) {
