@@ -1,14 +1,10 @@
-/*var sprites = {
- ship: { sx: 0, sy: 0, w: 37, h: 42, frames: 1 },
- missile: { sx: 0, sy: 30, w: 2, h: 10, frames: 1 },
- enemy_purple: { sx: 37, sy: 0, w: 42, h: 43, frames: 1 },
- enemy_bee: { sx: 79, sy: 0, w: 37, h: 43, frames: 1 },
- enemy_ship: { sx: 116, sy: 0, w: 42, h: 43, frames: 1 },
- enemy_circle: { sx: 158, sy: 0, w: 32, h: 33, frames: 1 },
- explosion: { sx: 0, sy: 64, w: 64, h: 64, frames: 12 },
- enemy_missile: { sx: 9, sy: 42, w: 3, h: 20, frame: 1, }
-};*/
-
+/*
+deadzones zonas:
+128
+96
+64
+32
+*/
 var sprites = {
  Beer: { sx: 512, sy: 99, w: 23, h: 32, frames: 1 },
  Glass: { sx: 512, sy: 131, w: 23, h: 32, frames: 1 },
@@ -35,7 +31,8 @@ var OBJECT_PLAYER = 1,
     OBJECT_PLAYER_PROJECTILE = 2,
     OBJECT_ENEMY = 4,
     OBJECT_ENEMY_PROJECTILE = 8,
-    OBJECT_POWERUP = 16;
+    OBJECT_POWERUP = 16,
+    OBJECT_DEADZONE = 20;
 
 var startGame = function() {
   var ua = navigator.userAgent.toLowerCase();
@@ -70,6 +67,9 @@ var level1 = [
 var playGame = function() {
   var board = new GameBoard();
   board.add(new TapperBG());
+  board.add(new PlayerGame());
+  board.add(new Cliente(100, 90, 50));
+  board.add(new Deadzone(128 - 23, 90));
   //board.add(new PlayerShip());
   //board.add(new Level(level1,winGame));
   Game.setBoard(1,board);
@@ -160,6 +160,167 @@ var TapperBG = function() {
 
 };
 TapperBG.prototype = new Sprite();
+
+var Deadzone = function(x, y) {
+  this.setup('Glass', {});
+  this.x = x;
+  this.y = y;
+
+  this.step = function(dt) {
+  };
+
+};
+Deadzone.prototype = new Sprite();
+Deadzone.prototype.type = OBJECT_DEADZONE;
+// Comment to debug
+Deadzone.prototype.draw = function(ctx){};
+
+var Cerveza = function(x, y, velx) {
+  this.setup('Beer',{ });
+
+  this.x = x;
+  this.y = y;
+  // TODO, preguntar porque funciona en setup y fuera
+  this.vx = velx;
+  this.safeCollision = 1;
+  this.exitedDeadzone = false;
+
+  this.step = function(dt) {
+  	this.x += this.vx * dt;
+  	var collision = this.board.collide(this,OBJECT_ENEMY);
+  	if(this.safeCollision === 0) {
+    	this.board.remove(this);
+    	this.board.add(new CervezaVacia(this.x,this.y, -this.vx));
+
+	}
+	else if(collision){
+		this.safeCollision--;
+	}
+
+	var collision2 = this.board.collide(this,OBJECT_DEADZONE);
+	if(collision2 && this.exitedDeadzone){
+		this.board.remove(this);
+	}
+	else if(collision2 && !this.exitedDeadzone){
+		this.board.remove(this);
+	}
+  };
+
+};
+Cerveza.prototype = new Sprite();
+Cerveza.prototype.type = OBJECT_PLAYER_PROJECTILE;
+
+var CervezaVacia = function(x, y, velx) {
+  this.setup('Glass',{ });
+
+  this.x = x;
+  this.y = y;
+  // TODO, preguntar porque funciona en setup y fuera
+  this.vx = velx;
+
+  this.step = function(dt) {
+  	this.x += this.vx * dt;
+  	var collision = this.board.collide(this,OBJECT_DEADZONE);
+  	if(collision) {
+    	this.board.remove(this);
+
+	} /*else if(this.y < -this.h) { 
+	    this.board.remove(this); 
+	}*/
+  };
+
+};
+CervezaVacia.prototype = new Sprite();
+CervezaVacia.prototype.type = OBJECT_ENEMY_PROJECTILE;
+
+var Cliente = function(x, y, velx) {
+  this.setup('NPC',{ });
+
+  this.x = x;
+  this.y = y;
+  // TODO, preguntar porque funciona en setup y fuera
+  this.vx = velx;
+
+  this.step = function(dt) {
+  	this.x += this.vx * dt;
+  	//TODO problema doble colision fallida
+  	var collision = this.board.collide(this,OBJECT_PLAYER_PROJECTILE);
+  	if(collision) {
+    	this.board.remove(this);
+	} /*else if(this.y < -this.h) { 
+	    this.board.remove(this); 
+	}*/
+  };
+
+};
+Cliente.prototype = new Sprite();
+Cliente.prototype.type = OBJECT_ENEMY;
+
+var PlayerGame = function() {
+  this.setup('Player', {});
+
+  this.x = 325;
+  this.y = 90;
+  var keyup = true;
+  var lastkey = null;
+
+  this.step = function(dt) {
+  	if(!keyup && !Game.keys[lastkey])
+  		keyup = true;
+  	if(Game.keys['arriba'] && keyup) { 
+  		lastkey = 'arriba';
+  		keyup = false;
+  		if(this.x === 325 && this.y === 90){
+    		this.x = 421;
+    		this.y = 377;
+    	}
+    	else if(this.x === 357 && this.y === 185){
+    		this.x = 325;
+    		this.y = 90;
+    	}
+    	else if(this.x === 389 && this.y === 281){
+    		this.x = 357;
+    		this.y = 185;
+    	}
+    	else if(this.x === 421 && this.y === 377){
+    		this.x = 389;
+    		this.y = 281;
+    	}
+  	}
+    else if(Game.keys['abajo'] && keyup) {
+    	lastkey = 'abajo';
+    	keyup = false;
+    	if(this.x === 325 && this.y === 90){
+    		this.x = 357;
+    		this.y = 185;
+    	}
+    	else if(this.x === 357 && this.y === 185){
+    		this.x = 389;
+    		this.y = 281;
+    	}
+    	else if(this.x === 389 && this.y === 281){
+    		this.x = 421;
+    		this.y = 377;
+    	}
+    	else if(this.x === 421 && this.y === 377){
+    		this.x = 325;
+    		this.y = 90;
+    	}
+    }
+    else if(Game.keys['espacio'] && keyup) {
+      lastkey = 'espacio';
+      keyup = false;
+      //Game.keys['fire'] = false;
+      
+      this.board.add(new Cerveza(this.x - 23,this.y, -50));
+    }
+    else{
+
+    }
+  };
+
+};
+PlayerGame.prototype = new Sprite();
 
 var PlayerShip = function() { 
   this.setup('ship', { vx: 0, reloadTime: 0.25, maxVel: 200 });
