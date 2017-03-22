@@ -192,18 +192,16 @@ var Cerveza = function(x, y, velx) {
     	this.board.remove(this);
     	this.board.add(new CervezaVacia(this.x,this.y, -this.vx));
 
-	}
-	else if(collision){
-		this.safeCollision--;
-	}
+	  }
+	  else if(collision){
+		  this.safeCollision--;
+	  }
 
-	var collision2 = this.board.collide(this,OBJECT_DEADZONE);
-	if(collision2 && this.exitedDeadzone){
-		this.board.remove(this);
-	}
-	else if(collision2 && !this.exitedDeadzone){
-		this.board.remove(this);
-	}
+  	var collision2 = this.board.collide(this,OBJECT_DEADZONE);
+  	if(collision2 && this.exitedDeadzone){
+  		this.board.remove(this);
+      console.log('hola2');
+  	}
   };
 
 };
