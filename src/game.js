@@ -69,14 +69,15 @@ var playGame = function() {
   board.add(new TapperBG());
   board.add(new PlayerGame());
   board.add(new Cliente(100, 90, 50));
-  board.add(new Deadzone(128 - 23, 90));
+  board.add(new Deadzone(128 - 23, 90));    //izda
   board.add(new Deadzone(96 - 23, 185));
   board.add(new Deadzone(64 - 23, 281));
   board.add(new Deadzone(32 - 23, 377));
-  board.add(new Deadzone(325, 90));
-  board.add(new Deadzone(357, 185));
-  board.add(new Deadzone(389, 281));
-  board.add(new Deadzone(421, 377));
+  var pickUpMargin = 15;
+  board.add(new Deadzone(325 + pickUpMargin, 90));     //derecha
+  board.add(new Deadzone(357 + pickUpMargin, 185));
+  board.add(new Deadzone(389 + pickUpMargin, 281));
+  board.add(new Deadzone(421 + pickUpMargin, 377));
   //board.add(new PlayerShip());
   //board.add(new Level(level1,winGame));
   Game.setBoard(1,board);
@@ -187,7 +188,6 @@ var Cerveza = function(x, y, velx) {
 
   this.x = x;
   this.y = y;
-  // TODO, preguntar porque funciona en setup y fuera
   this.vx = velx;
   this.safeCollision = 8;
   this.exitedDeadzone = false;
@@ -217,7 +217,6 @@ var CervezaVacia = function(x, y, velx) {
 
   this.x = x;
   this.y = y;
-  // TODO, preguntar porque funciona en setup y fuera
   this.vx = velx;
 
   this.step = function(dt) {
@@ -240,7 +239,6 @@ var Cliente = function(x, y, velx) {
 
   this.x = x;
   this.y = y;
-  // TODO, preguntar porque funciona en setup y fuera
   this.vx = velx;
   this.safeCollision = 5;
 
