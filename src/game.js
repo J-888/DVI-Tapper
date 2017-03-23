@@ -32,7 +32,7 @@ var OBJECT_PLAYER = 1,
     OBJECT_ENEMY = 4,
     OBJECT_ENEMY_PROJECTILE = 8,
     OBJECT_POWERUP = 16,
-    OBJECT_DEADZONE = 20;
+    OBJECT_DEADZONE = 32;
 
 var startGame = function() {
   var ua = navigator.userAgent.toLowerCase();
@@ -70,6 +70,13 @@ var playGame = function() {
   board.add(new PlayerGame());
   board.add(new Cliente(100, 90, 50));
   board.add(new Deadzone(128 - 23, 90));
+  board.add(new Deadzone(96 - 23, 185));
+  board.add(new Deadzone(64 - 23, 281));
+  board.add(new Deadzone(32 - 23, 377));
+  board.add(new Deadzone(325, 90));
+  board.add(new Deadzone(357, 185));
+  board.add(new Deadzone(389, 281));
+  board.add(new Deadzone(421, 377));
   //board.add(new PlayerShip());
   //board.add(new Level(level1,winGame));
   Game.setBoard(1,board);
@@ -182,25 +189,22 @@ var Cerveza = function(x, y, velx) {
   this.y = y;
   // TODO, preguntar porque funciona en setup y fuera
   this.vx = velx;
-  this.safeCollision = 1;
+  this.safeCollision = 8;
   this.exitedDeadzone = false;
 
   this.step = function(dt) {
   	this.x += this.vx * dt;
   	var collision = this.board.collide(this,OBJECT_ENEMY);
-  	if(this.safeCollision === 0) {
+
+  	if(collision) {
     	this.board.remove(this);
     	this.board.add(new CervezaVacia(this.x,this.y, -this.vx));
-
-	  }
-	  else if(collision){
-		  this.safeCollision--;
-	  }
+    	collision.collisionCerveza();
+	}
 
   	var collision2 = this.board.collide(this,OBJECT_DEADZONE);
-  	if(collision2 && this.exitedDeadzone){
+  	if(collision2 && this.x < 150){
   		this.board.remove(this);
-      console.log('hola2');
   	}
   };
 
@@ -238,17 +242,16 @@ var Cliente = function(x, y, velx) {
   this.y = y;
   // TODO, preguntar porque funciona en setup y fuera
   this.vx = velx;
+  this.safeCollision = 5;
 
   this.step = function(dt) {
   	this.x += this.vx * dt;
-  	//TODO problema doble colision fallida
-  	var collision = this.board.collide(this,OBJECT_PLAYER_PROJECTILE);
-  	if(collision) {
-    	this.board.remove(this);
-	} /*else if(this.y < -this.h) { 
-	    this.board.remove(this); 
-	}*/
+  	//var collision = this.board.collide(this,OBJECT_PLAYER_PROJECTILE);
   };
+
+  this.collisionCerveza = function(){
+  	this.board.remove(this);
+  }
 
 };
 Cliente.prototype = new Sprite();
