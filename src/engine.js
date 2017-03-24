@@ -388,7 +388,7 @@ var TouchControls = function() {
 
     var yLoc = Game.height - unitWidth;
     this.drawSquare(ctx,gutterWidth,yLoc,"\u25B2", Game.keys['arriba']);
-    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"B", Game.keys['abajo']);
+    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25BC", Game.keys['abajo']);
     this.drawSquare(ctx,4*unitWidth,yLoc,"_",Game.keys['espacio']);
 
     ctx.restore();
