@@ -28,19 +28,13 @@ var OBJECT_PLAYER = 1,
     OBJECT_DEADZONE = 32;
 
 var startGame = function() {
-  var ua = navigator.userAgent.toLowerCase();
-
+  /*var ua = navigator.userAgent.toLowerCase();
   // Only 1 row of stars
   if(ua.match(/android/)) {
     Game.setBoard(0,new Starfield(50,0.6,100,true));
-  } else {
-    Game.setBoard(0,new Starfield(20,0.4,100,true));
-    Game.setBoard(1,new Starfield(50,0.6,100));
-    Game.setBoard(2,new Starfield(100,1.0,50));
-  }  
-  Game.setBoard(3,new TitleScreen("Alien Invasion", 
-                                  "Press fire to start playing",
-                                  playGame));
+  }*/
+
+  Game.setBoard(0,new TitleScreen("tapper", "Press space to start playing", playGame));
 };
 
 var level1 = [
@@ -593,8 +587,8 @@ Explosion.prototype.step = function(dt) {
 };
 
 window.addEventListener("load", function() {
-  //Game.initialize("game",sprites,startGame);
-  Game.initialize("game",sprites,playGame);
+  Game.initialize("game",sprites,startGame);
+  //Game.initialize("game",sprites,playGame);
 });
 
 
