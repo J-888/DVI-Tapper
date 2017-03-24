@@ -60,6 +60,9 @@ var level1 = [
 var playGame = function() {
   var board = new GameBoard();
 
+  /*RESET*/
+  GameManager.reset();
+
   /*BG*/
   board.add(new TapperBG());
   var pared = new TapperBGParedIzquierda();
