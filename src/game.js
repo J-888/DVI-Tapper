@@ -62,6 +62,8 @@ var playGame = function() {
 
   /*BG*/
   board.add(new TapperBG());
+  var pared = new TapperBGParedIzquierda();
+  board.add(pared);
 
   /*PLAYER*/
   board.add(new PlayerGame());
@@ -74,10 +76,10 @@ var playGame = function() {
 
   /*SPAWNS*/
   			//Spawn(y, startTime, delay, nClientes, cliente)
-  board.add(new Spawn( 90, 0.65, 3, 5, clienteSpeed1));
-  /*board.add(new Spawn(185, 1.5 , 3, 5, clienteSpeed2));
-  board.add(new Spawn(281, 2   , 3, 5, clienteSpeed3));
-  board.add(new Spawn(377, 2.5 , 3, 5, clienteSpeed4));*/
+  board.add(new Spawn( 90, 0.65, 3, 5, clienteSpeed1, pared));
+  /*board.add(new Spawn(185, 1.5 , 3, 5, clienteSpeed2, pared));
+  board.add(new Spawn(281, 2   , 3, 5, clienteSpeed3, pared));
+  board.add(new Spawn(377, 2.5 , 3, 5, clienteSpeed4, pared));*/
 
   /*DEADZONES*/
   board.add(new Deadzone(128 - 23, 90, "left"));    //izda
@@ -215,10 +217,23 @@ var TapperBG = function() {
   this.x = 0;
   this.y = 0;
 
-  this.step = function(dt) {
-  };
+  this.step = function(dt) { };
 };
 TapperBG.prototype = new Sprite();
+
+var TapperBGParedIzquierda = function() {
+  this.setup('ParedIzda', {});
+
+  this.x = 0;
+  this.y = 0;
+
+  this.step = function(dt) { };
+  this.repaint = function(dt) {
+  	this.board.remove(this);
+  	this.board.add(this);
+  };
+};
+TapperBGParedIzquierda.prototype = new Sprite();
 
 var Deadzone = function(x, y, side) {
   this.setup('Glass', {});
@@ -317,7 +332,7 @@ var Cliente = function(x, y, velx) {
 Cliente.prototype = new Sprite();
 Cliente.prototype.type = OBJECT_ENEMY;
 
-var Spawn = function(y, startTime, delay, nClientes, cliente) {
+var Spawn = function(y, startTime, delay, nClientes, cliente, pared) {
   this.x = 0;
   this.y = y;
   this.delay = delay;
@@ -326,6 +341,7 @@ var Spawn = function(y, startTime, delay, nClientes, cliente) {
   this.cliente = cliente;
   this.cliente.x = this.x;
   this.cliente.y = this.y;
+  this.pared = pared;
   GameManager.notifyAddClientes(this.nClientes);
 
   this.step = function(dt) {
@@ -336,6 +352,7 @@ var Spawn = function(y, startTime, delay, nClientes, cliente) {
   			this.nClientes--;
   			var nuevoCliente = Object.create(this.cliente);
   			this.board.add(nuevoCliente);
+  			this.pared.repaint();
   		}
   	}
   };
