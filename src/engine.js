@@ -166,8 +166,8 @@ var SpriteSheet = new function() {
 var TitleScreen = function TitleScreen(title,subtitle,callback) {
   var up = false;
   this.step = function(dt) {
-    if(!Game.keys['fire']) up = true;
-    if(up && Game.keys['fire'] && callback) callback();
+    if(!Game.keys['espacio']) up = true;
+    if(up && Game.keys['espacio'] && callback) callback();
   };
 
   this.draw = function(ctx) {
@@ -418,7 +418,7 @@ var TouchControls = function() {
         touch = e.changedTouches[i];
         x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
         if(x > 4 * unitWidth) {
-          Game.keys['fire'] = (e.type == 'touchstart');
+          Game.keys['espacio'] = (e.type == 'touchstart');
         }
       }
     }
