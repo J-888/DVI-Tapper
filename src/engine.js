@@ -388,8 +388,8 @@ var TouchControls = function() {
 
     var yLoc = Game.height - unitWidth;
     this.drawSquare(ctx,gutterWidth,yLoc,"\u25B2", Game.keys['arriba']);
-    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25BC", Game.keys['abajo']);
-    this.drawSquare(ctx,4*unitWidth,yLoc,"\u1F37",Game.keys['espacio']);
+    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"B", Game.keys['abajo']);
+    this.drawSquare(ctx,4*unitWidth,yLoc,"_",Game.keys['espacio']);
 
     ctx.restore();
   };
@@ -400,16 +400,16 @@ var TouchControls = function() {
     var touch, x;
 
     e.preventDefault();
-    Game.keys['left'] = false;
-    Game.keys['right'] = false;
+    Game.keys['arriba'] = false;
+    Game.keys['abajo'] = false;
     for(var i=0;i<e.targetTouches.length;i++) {
       touch = e.targetTouches[i];
       x = touch.pageX / Game.canvasMultiplier - Game.canvas.offsetLeft;
       if(x < unitWidth) {
-        Game.keys['left'] = true;
+        Game.keys['arriba'] = true;
       } 
       if(x > unitWidth && x < 2*unitWidth) {
-        Game.keys['right'] = true;
+        Game.keys['abajo'] = true;
       } 
     }
 
