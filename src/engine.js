@@ -387,9 +387,9 @@ var TouchControls = function() {
     ctx.save();
 
     var yLoc = Game.height - unitWidth;
-    this.drawSquare(ctx,gutterWidth,yLoc,"\u25C0", Game.keys['arriba']);
-    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25B6", Game.keys['abajo']);
-    this.drawSquare(ctx,4*unitWidth,yLoc,"A",Game.keys['espacio']);
+    this.drawSquare(ctx,gutterWidth,yLoc,"\u25B2", Game.keys['arriba']);
+    this.drawSquare(ctx,unitWidth + gutterWidth,yLoc,"\u25BC", Game.keys['abajo']);
+    this.drawSquare(ctx,4*unitWidth,yLoc,"\u1F37",Game.keys['espacio']);
 
     ctx.restore();
   };
