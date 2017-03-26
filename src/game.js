@@ -73,10 +73,10 @@ var playGame = function() {
 
   /*SPAWNS*/
   			//Spawn(y, startTime, delay, nClientes, cliente)
-  board.add(new Spawn( 90, 0.65, 3, 5, clienteSpeed1, pared));
-  /*board.add(new Spawn(185, 1.5 , 3, 5, clienteSpeed2, pared));
-  board.add(new Spawn(281, 2   , 3, 5, clienteSpeed3, pared));
-  board.add(new Spawn(377, 2.5 , 3, 5, clienteSpeed4, pared));*/
+  board.add(new Spawn( 90, 0.65 + 0, 3, 2, clienteSpeed1, pared));
+  board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2, pared));
+  board.add(new Spawn(281, 2    + 5, 3, 2, clienteSpeed3, pared));
+  board.add(new Spawn(377, 2.5  + 6, 3, 1, clienteSpeed4, pared));
 
   /*DEADZONES*/
   board.add(new Deadzone(128 - 23, 90, "left"));    //izda
