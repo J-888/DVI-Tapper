@@ -82,10 +82,12 @@ var GameManager = new function() {
   var currentJarrasVacias = 0;
 
   this.winGame = function() {
+    Game.setBoardActive(1, false);
     Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", playGame));
   };
 
   this.loseGame = function() {
+    Game.setBoardActive(1, false);
     Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", playGame));
   };
 

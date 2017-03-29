@@ -175,7 +175,8 @@ var TitleScreen = function TitleScreen(title,subtitle,callback) {
   this.draw = function(ctx) {
 
     // Background
-    ctx.fillStyle = "#000000";
+    //ctx.fillStyle = "#000000";
+    ctx.fillStyle = "rgba(0,0,0,0)";
     ctx.fillRect(0, 0, Game.width, Game.height);
 
     // Foreground
