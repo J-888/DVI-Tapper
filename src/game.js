@@ -35,6 +35,9 @@ var playGame = function() {
   var pared = new TapperBGParedIzquierda();
   board.add(pared);
 
+  /*POINTS*/  
+  board.add(new GamePoints());
+
   /*PLAYER*/
   board.add(new PlayerGame());
 
@@ -108,6 +111,7 @@ var GameManager = new function() {
 
   this.notifyClienteServido = function() {
     totalClientes--;
+    Game.points += 100;
   }
 
   this.notifyNuevaJarraVacia = function() {
@@ -116,6 +120,7 @@ var GameManager = new function() {
 
   this.notifyJarraVaciaRecogida = function() {
     currentJarrasVacias--;
+    Game.points += 100;
     this.checkWin();
   }
 };
