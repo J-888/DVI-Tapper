@@ -26,6 +26,7 @@
 
 var Game = new function() {                                                                  
   var boards = [];
+  var boardsIsActive = [];
 
   // Game Initialization
   this.initialize = function(canvasElementId,sprite_data,callback) {
@@ -84,7 +85,7 @@ var Game = new function() {
     if(dt > maxTime) { dt = maxTime; }
 
     for(var i=0,len = boards.length;i<len;i++) {
-      if(boards[i]) { 
+      if(boards[i] && boardsIsActive[i] == true) { 
         boards[i].step(dt);
         boards[i].draw(Game.ctx);
       }
@@ -93,8 +94,9 @@ var Game = new function() {
   };
   
   // Change an active game board
-  this.setBoard = function(num,board) { boards[num] = board; };
-
+  this.setBoard = function(num,board) { boards[num] = board; boardsIsActive[num] = true;};
+  
+  this.setBoardActive = function(num, isActive) { boardsIsActive[num] = isActive; };
 
   this.setupMobile = function() {
     var container = document.getElementById("container"),

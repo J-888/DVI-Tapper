@@ -21,19 +21,25 @@ var startGame = function() {
     Game.setBoard(0,new Starfield(50,0.6,100,true));
   }*/
 
-  Game.setBoard(0,new TitleScreen("tapper", "Press space to start playing", playGame));
+  buildBG();
+  buildFG();
+  Game.setBoard(3,new TitleScreen("tapper", "Press space to start playing", playGame));
 };
 
+var buildBG = function() {
+  Game.setBoard(0,new TapperBG());
+}
+
+var buildFG = function() {
+  Game.setBoard(2, new TapperBGParedIzquierda());
+}
+
 var playGame = function() {
+  Game.setBoardActive(3, false);
   var board = new GameBoard();
 
   /*RESET*/
   GameManager.reset();
-
-  /*BG*/
-  board.add(new TapperBG());
-  var pared = new TapperBGParedIzquierda();
-  board.add(pared);
 
   /*POINTS*/  
   board.add(new GamePoints());
@@ -49,10 +55,10 @@ var playGame = function() {
 
   /*SPAWNS*/
   			//Spawn(y, startTime, delay, nClientes, cliente)
-  board.add(new Spawn( 90, 0.65 + 0, 3, 2, clienteSpeed1, pared));
-  board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2, pared));
-  board.add(new Spawn(281, 2    + 5, 3, 2, clienteSpeed3, pared));
-  board.add(new Spawn(377, 2.5  + 6, 3, 1, clienteSpeed4, pared));
+  board.add(new Spawn( 90, 0.65 + 0, 3, 2, clienteSpeed1));
+  board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2));
+  board.add(new Spawn(281, 2    + 5, 3, 2, clienteSpeed3));
+  board.add(new Spawn(377, 2.5  + 6, 3, 1, clienteSpeed4));
 
   /*DEADZONES*/
   board.add(new Deadzone(128 - 23, 90, "left"));    //izda
@@ -65,7 +71,7 @@ var playGame = function() {
   board.add(new Deadzone(389 + pickUpMargin, 281, "right"));
   board.add(new Deadzone(421 + pickUpMargin, 377, "right"));
 
-  Game.setBoard(0,board);
+  Game.setBoard(1,board);
 };
 
 var GameManager = new function() {       
@@ -74,11 +80,11 @@ var GameManager = new function() {
   var currentJarrasVacias = 0;
 
   this.winGame = function() {
-    Game.setBoard(0,new TitleScreen("You win!", "Press space to play again", playGame));
+    Game.setBoard(3,new TitleScreen("You win!", "Press space to play again", playGame));
   };
 
   this.loseGame = function() {
-    Game.setBoard(0,new TitleScreen("You lose!", "Press space to play again", playGame));
+    Game.setBoard(3,new TitleScreen("You lose!", "Press space to play again", playGame));
   };
 
   this.checkWin = function() {
@@ -142,10 +148,6 @@ var TapperBGParedIzquierda = function() {
   this.y = 0;
 
   this.step = function(dt) { };
-  this.repaint = function(dt) {
-  	this.board.remove(this);
-  	this.board.add(this);
-  };
 };
 TapperBGParedIzquierda.prototype = new Sprite();
 
@@ -246,7 +248,7 @@ var Cliente = function(x, y, velx) {
 Cliente.prototype = new Sprite();
 Cliente.prototype.type = OBJECT_ENEMY;
 
-var Spawn = function(y, startTime, delay, nClientes, cliente, pared) {
+var Spawn = function(y, startTime, delay, nClientes, cliente) {
   this.x = 0;
   this.y = y;
   this.delay = delay;
@@ -255,7 +257,6 @@ var Spawn = function(y, startTime, delay, nClientes, cliente, pared) {
   this.cliente = cliente;
   this.cliente.x = this.x;
   this.cliente.y = this.y;
-  this.pared = pared;
   GameManager.notifyAddClientes(this.nClientes);
 
   this.step = function(dt) {
@@ -266,7 +267,6 @@ var Spawn = function(y, startTime, delay, nClientes, cliente, pared) {
   			this.nClientes--;
   			var nuevoCliente = Object.create(this.cliente);
   			this.board.add(nuevoCliente);
-  			this.pared.repaint();
   		}
   	}
   };
