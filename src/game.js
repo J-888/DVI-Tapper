@@ -23,7 +23,7 @@ var startGame = function() {
 
   buildBG();
   buildFG();
-  Game.setBoard(3,new TitleScreen("tapper", "Press space to start playing", playGame));
+  Game.setBoard(4,new TitleScreen("tapper", "Press space to start playing", playGame));
 };
 
 var buildBG = function() {
@@ -32,10 +32,12 @@ var buildBG = function() {
 
 var buildFG = function() {
   Game.setBoard(2, new TapperBGParedIzquierda());
+  /*POINTS*/  
+  Game.setBoard(3, new GamePoints());
 }
 
 var playGame = function() {
-  Game.setBoardActive(3, false);
+  Game.setBoardActive(4, false);
   var board = new GameBoard();
 
   /*RESET*/
@@ -80,11 +82,11 @@ var GameManager = new function() {
   var currentJarrasVacias = 0;
 
   this.winGame = function() {
-    Game.setBoard(3,new TitleScreen("You win!", "Press space to play again", playGame));
+    Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", playGame));
   };
 
   this.loseGame = function() {
-    Game.setBoard(3,new TitleScreen("You lose!", "Press space to play again", playGame));
+    Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", playGame));
   };
 
   this.checkWin = function() {
@@ -117,7 +119,7 @@ var GameManager = new function() {
 
   this.notifyClienteServido = function() {
     totalClientes--;
-    Game.points += 100;
+    Game.points += 50;
   }
 
   this.notifyNuevaJarraVacia = function() {
