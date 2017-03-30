@@ -15,6 +15,7 @@ var OBJECT_PLAYER = 1,
     OBJECT_DEADZONE = 32;
 
 var highScore = 0;
+var currentlevel = 1;
 
 var startGame = function() {
   /*var ua = navigator.userAgent.toLowerCase();
@@ -25,8 +26,12 @@ var startGame = function() {
 
   buildBG();
   buildFG();
-  Game.setBoard(4,new TitleScreen("tapper", "Press space to start playing","High Score: "+highScore, playGame));
+  Game.setBoard(4,new TitleScreen("tapper", "Press space to start playing","High Score: "+highScore, showLevelScreen));
 };
+
+var showLevelScreen = function() {
+  Game.setBoard(4,new TitleScreen("Level "+currentlevel, "Press space to start","", playGame));
+}
 
 var buildBG = function() {
   Game.setBoard(0,new TapperBG());
@@ -46,7 +51,8 @@ var playGame = function() {
   GameManager.reset();
 
   /*POINTS*/  
-  board.add(new GamePoints());
+  if (currentlevel == 1)
+  	board.add(new GamePoints());
 
   /*PLAYER*/
   board.add(new PlayerGame());
@@ -59,10 +65,18 @@ var playGame = function() {
 
   /*SPAWNS*/
   			//Spawn(y, startTime, delay, nClientes, cliente)
-  board.add(new Spawn( 90, 0.65 + 0, 3, 2, clienteSpeed1));
-  board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2));
-  board.add(new Spawn(281, 2    + 5, 3, 2, clienteSpeed3));
-  board.add(new Spawn(377, 2.5  + 6, 3, 1, clienteSpeed4));
+  if(currentlevel == 1){
+    board.add(new Spawn( 90, 0.65 + 0, 3, 1, clienteSpeed1));
+    board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2));
+    board.add(new Spawn(281, 2    + 5, 3, 1, clienteSpeed3));
+    board.add(new Spawn(377, 2.5  + 6, 3, 0, clienteSpeed4));
+  }  
+  else if(currentlevel == 2){
+    board.add(new Spawn( 90, 0.65 + 0, 3, 2, clienteSpeed1));
+    board.add(new Spawn(185, 1.5  + 2, 3, 1, clienteSpeed2));
+    board.add(new Spawn(281, 2    + 5, 3, 2, clienteSpeed3));
+    board.add(new Spawn(377, 2.5  + 6, 3, 1, clienteSpeed4));
+  }
 
   /*DEADZONES*/
   board.add(new Deadzone(128 - 23, 90, "left"));    //izda
@@ -85,12 +99,21 @@ var GameManager = new function() {
 
   this.winGame = function() {
     Game.setBoardActive(1, false);
-    if(Game.points > highScore){
-    	highScore = Game.points;
-    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore+"(NEW!)", playGame));
-    }
-    else
-    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore, playGame));
+    if (currentlevel == 2){
+	    if(Game.points > highScore){
+	    	highScore = Game.points;
+	    	currentlevel = 1;
+	    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore+" (NEW!)", showLevelScreen));
+	    }
+	    else{
+	    	currentlevel = 1;
+	    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore, showLevelScreen));
+	    }
+	}
+	else{
+		currentlevel++;
+		showLevelScreen();
+	}
 
   };
 
@@ -98,10 +121,13 @@ var GameManager = new function() {
     Game.setBoardActive(1, false);
     if(Game.points > highScore){
     	highScore = Game.points;
-    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore+" (NEW!)", playGame));
+	    currentlevel = 1;
+    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore+" (NEW!)", showLevelScreen));
     }
-    else
-    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore, playGame));
+    else{
+	    currentlevel = 1;
+    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore, showLevelScreen));
+    }
   };
 
   this.checkWin = function() {
