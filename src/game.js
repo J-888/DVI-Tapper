@@ -14,6 +14,8 @@ var OBJECT_PLAYER = 1,
     OBJECT_POWERUP = 16,
     OBJECT_DEADZONE = 32;
 
+var highScore = 0;
+
 var startGame = function() {
   /*var ua = navigator.userAgent.toLowerCase();
   // Only 1 row of stars
@@ -23,7 +25,7 @@ var startGame = function() {
 
   buildBG();
   buildFG();
-  Game.setBoard(4,new TitleScreen("tapper", "Press space to start playing", playGame));
+  Game.setBoard(4,new TitleScreen("tapper", "Press space to start playing","High Score: "+highScore, playGame));
 };
 
 var buildBG = function() {
@@ -83,12 +85,23 @@ var GameManager = new function() {
 
   this.winGame = function() {
     Game.setBoardActive(1, false);
-    Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", playGame));
+    if(Game.points > highScore){
+    	highScore = Game.points;
+    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore+"(NEW!)", playGame));
+    }
+    else
+    	Game.setBoard(4,new TitleScreen("You win!", "Press space to play again", "High Score: "+highScore, playGame));
+
   };
 
   this.loseGame = function() {
     Game.setBoardActive(1, false);
-    Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", playGame));
+    if(Game.points > highScore){
+    	highScore = Game.points;
+    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore+" (NEW!)", playGame));
+    }
+    else
+    	Game.setBoard(4,new TitleScreen("You lose!", "Press space to play again", "High Score: "+highScore, playGame));
   };
 
   this.checkWin = function() {
